@@ -42,13 +42,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.example.possystem.data.AuthViewModel
 import com.example.possystem.navigation.ROUTE_LOGIN
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Dashboard(navController: NavHostController){
+    val authViewModel: AuthViewModel = viewModel()
     var selectedItem by remember { mutableIntStateOf(0)}
     Scaffold (
         topBar = { TopAppBar(
@@ -61,9 +64,7 @@ fun Dashboard(navController: NavHostController){
                 titleContentColor = Color.Black,),
             actions = {
                 IconButton(onClick = {
-                    navController.navigate(ROUTE_LOGIN){
-                        popUpTo(navController.graph.startDestinationId) { inclusive = true }
-                    }
+                    authViewModel.logout(navController)
                 }) {
                     Icon(imageVector = Icons.AutoMirrored.Filled.ExitToApp, contentDescription = "Logout")
                 }

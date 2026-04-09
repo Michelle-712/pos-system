@@ -1,6 +1,5 @@
 package com.example.possystem.ui.theme.screens.register
 
-import android.service.controls.Control
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -21,6 +20,7 @@ import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -38,7 +38,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.modifier.modifierLocalOf
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -46,20 +46,23 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.possystem.R
+import com.example.possystem.data.AuthViewModel
 import com.example.possystem.navigation.ROUTE_LOGIN
-import com.example.possystem.navigation.ROUTE_REGISTER
 
 @Composable
 fun RegisterScreen(navController: NavController){
     var username by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
+    var phoneNumber by remember { mutableStateOf("") }
     var password by remember {mutableStateOf("")}
     var confirmpassword by remember {mutableStateOf("")}
     var passwordVisible by remember { mutableStateOf(false) }
+    val authViewModel: AuthViewModel = viewModel()
+    val context = LocalContext.current
 
 
     Column(
@@ -81,6 +84,7 @@ fun RegisterScreen(navController: NavController){
 
            )
 
+        Spacer(modifier = Modifier.height(12.dp))
 
         Card(
             shape = RoundedCornerShape(20.dp),
@@ -127,6 +131,17 @@ fun RegisterScreen(navController: NavController){
                 Spacer(modifier = Modifier.height(12.dp))
 
                 OutlinedTextField(
+                    value = phoneNumber,
+                    onValueChange = { phoneNumber = it },
+                    label = { Text("Enter Phone Number") },
+                    leadingIcon = { Icon(Icons.Default.Phone, null) },
+                    shape = RoundedCornerShape(18.dp),
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                OutlinedTextField(
                     value = password,
                     onValueChange = { password = it },
                     label = { Text("Enter Password") },
@@ -158,7 +173,14 @@ fun RegisterScreen(navController: NavController){
                 Spacer(modifier = Modifier.height(20.dp))
 
                 Button(
-                    onClick = {},
+                    onClick = {authViewModel.signup(
+                        username=username,
+                        email=email,
+                        phoneNumber=phoneNumber,
+                        password=password,
+                        confirmpassword=confirmpassword,
+                        navController=navController,
+                        context = context)},
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(50.dp)
@@ -167,31 +189,25 @@ fun RegisterScreen(navController: NavController){
                     Text("Register",
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold)
-                    Spacer(modifier = Modifier.height(12.dp))
-
-
-
-
-                    }
                 }
 
-            Row (modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center, // Centers the text horizontally
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(text = "Already have an account? ",
-                    fontSize = 14.sp,
-                    color = Color.Gray)
+                Spacer(modifier = Modifier.height(12.dp))
 
+                Row (modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(text = "Already have an account? ",
+                        fontSize = 14.sp,
+                        color = Color.Gray)
 
-
-                Text(text = "Login here",
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.ExtraBold,
-                    color = Color(0xFF1565C0),
-
-                    modifier = Modifier.clickable { navController.navigate(ROUTE_LOGIN)}
-                )
+                    Text(text = "Login here",
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.ExtraBold,
+                        color = Color(0xFF1565C0),
+                        modifier = Modifier.clickable { navController.navigate(ROUTE_LOGIN)}
+                    )
+                }
             }
         }
     }

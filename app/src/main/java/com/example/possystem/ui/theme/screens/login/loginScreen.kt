@@ -17,15 +17,12 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -38,15 +35,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.possystem.R
+import com.example.possystem.data.AuthViewModel
 import com.example.possystem.navigation.ROUTE_REGISTER
 
 @Composable
@@ -54,6 +53,8 @@ fun LoginScreen(navController: NavController){
 
     var email by remember { mutableStateOf("") }
     var password by remember {mutableStateOf("")}
+    val context = LocalContext.current
+    val authViewModel: AuthViewModel = viewModel()
 
 
     Column(
@@ -98,7 +99,6 @@ fun LoginScreen(navController: NavController){
 
                 Spacer(modifier = Modifier.height(12.dp))
 
-//
                 OutlinedTextField(
                     value = email,
                     onValueChange = { email = it },
@@ -122,51 +122,47 @@ fun LoginScreen(navController: NavController){
 
                 Spacer(modifier = Modifier.height(12.dp))
 
-//
                 Button(
-                    onClick = {},
+                    onClick = {
+                        authViewModel.login(
+                            email, password, navController, context)
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(50.dp)
-
                 ) {
                     Text("login",
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold)
+                }
 
                 Spacer(modifier = Modifier.height(12.dp))
 
-
-
-
-                }
-
-                 Row(modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center, // Centers the text horizontally
+                Row(modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                     Text(
-                         text = "Don't have an account? ",
-                         fontSize = 14.sp,
-                         color = Color.Gray
-                     )
+                    Text(
+                        text = "Don't have an account? ",
+                        fontSize = 14.sp,
+                        color = Color.Gray
+                    )
 
-                     Text(
-                         text = "Register here",
-                         fontSize = 14.sp,
-                         fontWeight = FontWeight.ExtraBold,
-                         color = Color(0xFF1565C0),
+                    Text(
+                        text = "Register here",
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.ExtraBold,
+                        color = Color(0xFF1565C0),
 
-                         modifier = Modifier.clickable { navController.navigate(ROUTE_REGISTER) })
-                 }
+                        modifier = Modifier.clickable { navController.navigate(ROUTE_REGISTER) })
+                }
             }
         }
     }
 }
+
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun LoginScreenPreview(){
     LoginScreen(rememberNavController())
 }
-
-
