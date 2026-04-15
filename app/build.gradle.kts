@@ -6,11 +6,7 @@ plugins {
 
 android {
     namespace = "com.example.possystem"
-    compileSdk {
-        version = release(36) {
-            minorApiLevel = 1
-        }
-    }
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.example.possystem"
@@ -53,6 +49,13 @@ dependencies {
     implementation(libs.androidx.benchmark.traceprocessor)
     implementation(libs.firebase.auth)
     implementation(libs.firebase.database)
+    
+    // Cloudinary & OkHttp
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
+    
+    // Coil for image loading
+    implementation("io.coil-kt:coil-compose:2.7.0")
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
